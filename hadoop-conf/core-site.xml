@@ -21,7 +21,7 @@
 
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://namenode_1:8020</value>
+    <value>hdfs://localhost:8020</value>
   </property>
 
   <!-- OOZIE proxy user setting -->

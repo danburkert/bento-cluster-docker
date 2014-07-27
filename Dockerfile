@@ -4,7 +4,7 @@ MAINTAINER Dan Burkert <dan@danburkert.com>
 RUN yum clean all
 
 # Install Java 7 and Yum utils (needed for the `yum-config-manager` tool)
-RUN yum install -y java-1.7.0-openjdk.x86_64 yum-utils
+RUN yum install -y java-1.7.0-openjdk.x86_64 yum-utils python-setuptools
 
 # Add the Cloudera CDH5 Yum repository
 RUN yum-config-manager --add-repo http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/cloudera-cdh5.repo
@@ -21,20 +21,39 @@ RUN yum install -y \
   hbase-master \
   hbase-regionserver
 
+# Install Hadoop configuration
 ADD hadoop-conf /etc/hadoop/conf.bento
 RUN alternatives --verbose --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.bento 50
 RUN alternatives --set hadoop-conf /etc/hadoop/conf.bento
 
+# Install ZooKeeper configuration
 ADD zookeeper-conf /etc/zookeeper/conf.bento
 RUN alternatives --verbose --install /etc/zookeeper/conf zookeeper-conf /etc/zookeeper/conf.bento 50
 RUN alternatives --set zookeeper-conf /etc/zookeeper/conf.bento
 
+# Install HBase configuration
 ADD hbase-conf /etc/hbase/conf.bento
 RUN alternatives --verbose --install /etc/hbase/conf hbase-conf /etc/hbase/conf.bento 50
 RUN alternatives --set hbase-conf /etc/hbase/conf.bento
 
+# Install supervisord and configuration
+RUN /usr/bin/easy_install supervisor
+ADD supervisord.conf /etc/supervisor/supervisord.conf
+
 # Format namenode
 USER hdfs
-RUN hdfs namenode -format
+RUN /usr/bin/hdfs namenode -format
+
+# Initialize ZooKeeper
+USER zookeeper
+RUN /usr/bin/zookeeper-server-initialize
+
+# Initialize HBase
+ADD hbase-init /hbase-init
+
+# Initialize mapreduce
+ADD mapreduce-init /mapreduce-init
 
 USER root
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
