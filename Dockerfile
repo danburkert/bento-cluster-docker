@@ -8,8 +8,9 @@ RUN yum install -y java-1.7.0-openjdk.x86_64 yum-utils python-setuptools
 
 # Add the Cloudera CDH5 Yum repository
 RUN yum-config-manager --add-repo http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/cloudera-cdh5.repo
+RUN yum-config-manager --add-repo http://rpm.datastax.com/community
 
-RUN yum install -y \
+RUN yum install -y --nogpgcheck \
   zookeeper-server \
   hadoop-hdfs-namenode \
   hadoop-hdfs-datanode \
@@ -19,7 +20,11 @@ RUN yum install -y \
   hadoop-mapreduce \
   hadoop-mapreduce-historyserver \
   hbase-master \
-  hbase-regionserver
+  hbase-regionserver \
+  jna \
+  dsc20 \
+  opscenter \
+  datastax-agent
 
 # Install Hadoop configuration
 ADD hadoop-conf /etc/hadoop/conf.bento
@@ -35,6 +40,11 @@ RUN alternatives --set zookeeper-conf /etc/zookeeper/conf.bento
 ADD hbase-conf /etc/hbase/conf.bento
 RUN alternatives --verbose --install /etc/hbase/conf hbase-conf /etc/hbase/conf.bento 50
 RUN alternatives --set hbase-conf /etc/hbase/conf.bento
+
+# Install Cassandra configuration
+ADD cassandra-conf /etc/cassandra/conf.bento
+RUN alternatives --verbose --install /etc/cassandra/conf cassandra-conf /etc/cassandra/conf.bento 50
+RUN alternatives --set cassandra-conf /etc/cassandra/conf.bento
 
 # Install supervisord and configuration
 RUN /usr/bin/easy_install supervisor
