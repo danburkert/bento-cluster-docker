@@ -4,22 +4,36 @@ A prototype for a Bento cluster (self contained HDFS/YARN/HBase/Cassandra enviro
 
 ## Usage
 
-	# build the image
-	docker build -t "danburkert/bento" .
-	
-	# start the container
-	docker run --name bento danburkert/bento
-	
-	# Get the Bento address
-	BENTO_ADDRESS=$(docker inspect --format="{{.NetworkSettings.IPAddress}}" bento)
-	
-	# Open the web interfaces
-	open $BENTO_ADDRESS:50010 # HDFS namenode
-	open $BENTO_ADDRESS:8088  # YARN resource manager
-	open $BENTO_ADDRESS:60010 # HBase master
-	open $BENTO_ADDRESS:9001  # supervisord
-	open $BENTO_ADDRESS:8888  # Cassandra Opscenter
-	
+    # build the image
+    docker build -t "danburkert/bento" .
+
+    # start the container
+    docker run --name bento danburkert/bento
+
+    # Get the Bento address
+    BENTO_ADDRESS=$(docker inspect --format="{{.NetworkSettings.IPAddress}}" bento)
+    BENTO_HOST=$(docker inspect --format="{{.Config.Hostname}}" bento)
+
+    # Add the Bento hostname to `/etc/hosts` (required to allow HBase to resolve region servers)
+    echo "${BENTO_ADDRESS}	${BENTO_HOST}" | sudo tee -a /etc/hosts
+
+### Web Interfaces
+
+    # HDFS namenode
+    open http://$BENTO_ADDRESS:50010
+
+    # YARN resource manager
+    open http://$BENTO_ADDRESS:8088
+
+    # HBase master
+    open http://$BENTO_ADDRESS:60010
+
+    # supervisord
+    open http://$BENTO_ADDRESS:9001
+
+    # Cassandra Opscenter
+    open http://$BENTO_ADDRESS:8888
+
 ## Installation
 
 #### Linux Host
