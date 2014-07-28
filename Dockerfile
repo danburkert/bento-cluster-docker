@@ -66,4 +66,6 @@ ADD mapreduce-init /mapreduce-init
 
 USER root
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+ADD start /start
+
+CMD ["/start"]
