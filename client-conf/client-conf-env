@@ -1,0 +1,10 @@
+#!/bin/bash
+
+main() {
+  local DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+  export HBASE_CONF_DIR="${DIR}/hbase-conf"
+  export HADOOP_CONF_DIR="${DIR}/hadoop-conf"
+}
+
+main

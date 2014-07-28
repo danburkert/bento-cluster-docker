@@ -17,6 +17,12 @@ A prototype for a Bento cluster (self contained HDFS/YARN/HBase/Cassandra enviro
     # Add the Bento hostname to /etc/hosts (required to allow HBase to resolve region servers)
     echo "${BENTO_ADDRESS}	${BENTO_HOST}" | sudo tee -a /etc/hosts
 
+    # Generate client configuration to connect to the Bento
+    ./client-conf/generate-client-configs
+
+    # Add client configs to current environment
+    source client-conf/client-conf-env
+
 ### Web Interfaces
 
     # HDFS namenode

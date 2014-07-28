@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+mkdir -p $DIR/hadoop-conf
+mkdir -p $DIR/hbase-conf
+
+cp $DIR/core-site.template.xml $DIR/hadoop-conf/core-site.xml
+cp $DIR/hbase-site.template.xml $DIR/hbase-conf/hbase-site.xml
+
+IP=$(docker inspect --format="{{.NetworkSettings.IPAddress}}" bento)
+
+sed "s/\$BENTO_ADDRESS/$IP/" $DIR/core-site.template.xml > $DIR/hadoop-conf/core-site.xml
+sed "s/\$BENTO_ADDRESS/$IP/" $DIR/hbase-site.template.xml > $DIR/hbase-conf/hbase-site.xml
