@@ -7,7 +7,7 @@ RUN yum clean all
 RUN yum install -y java-1.7.0-openjdk.x86_64 yum-utils python-setuptools
 
 # Add the Cloudera CDH5 Yum repository
-RUN yum-config-manager --add-repo http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/cloudera-cdh5.repo
+RUN yum-config-manager --add-repo http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.0.3/
 RUN yum-config-manager --add-repo http://rpm.datastax.com/community
 
 RUN yum install -y --nogpgcheck \

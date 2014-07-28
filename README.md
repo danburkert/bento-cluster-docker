@@ -20,19 +20,19 @@ A prototype for a Bento cluster (self contained HDFS/YARN/HBase/Cassandra enviro
 ### Web Interfaces
 
     # HDFS namenode
-    open http://${BENTO_ADDRESS}:50010
+    open http://$BENTO_HOST:50010
 
     # YARN resource manager
-    open http://${BENTO_ADDRESS}:8088
+    open http://$BENTO_HOST:8088
 
     # HBase master
-    open http://${BENTO_ADDRESS}:60010
+    open http://$BENTO_HOST:60010
 
     # supervisord
-    open http://${BENTO_ADDRESS}:9001
+    open http://$BENTO_HOST:9001
 
     # Cassandra Opscenter
-    open http://${BENTO_ADDRESS}:8888
+    open http://$BENTO_HOST:8888
 
 ## Installation
 
@@ -44,4 +44,4 @@ Requires [Docker](https://docker.com/). Docker [requires](http://docker.readthed
 
 1. Requires [boot2docker](https://github.com/boot2docker/boot2docker)
 2. Requires a network route to the bento box:
-    sudo route add $BENTO_ADDRESS/16 $(boot2docker ip 2> /dev/null)
+`sudo route add $BENTO_ADDRESS/16 $(boot2docker ip 2> /dev/null)`
